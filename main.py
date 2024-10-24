@@ -34,5 +34,23 @@ async def create_item(item: dict):
         raise HTTPException(status_code=500, detail=f"Error creating item: {e}")
 
 
+@app.get("/stat/")
+async def get_stat():
+    try:
+        response = supabase_client.table("current_stat").select("*").execute()
+        return response.data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching items: {e}")
+
+
+@app.post("/stat/")
+async def add_stat(item: dict):
+    try:
+        response = supabase_client.table("current_stat").insert(item).execute()
+        return {"message": "Item created successfully", "data": response.data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating item: {e}")
+
+
 if __name__ == "__main__":
     uvicorn.run(app=app)
