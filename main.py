@@ -1,5 +1,3 @@
-# import os
-
 import uvicorn
 from fastapi import FastAPI, HTTPException
 
@@ -14,7 +12,7 @@ async def root():
     return {"message": "Hello, World"}
 
 
-# Fetch all rows from a table
+# Fetch all rows from a table : user_response database
 @app.get("/items/")
 async def get_items():
     try:
@@ -24,7 +22,7 @@ async def get_items():
         raise HTTPException(status_code=500, detail=f"Error fetching items: {e}")
 
 
-# Insert a new row into a table
+# Insert a new row into a table : user_response database
 @app.post("/items/")
 async def create_item(item: dict):
     try:
@@ -34,6 +32,7 @@ async def create_item(item: dict):
         raise HTTPException(status_code=500, detail=f"Error creating item: {e}")
 
 
+# Fetch all rows from a table : current_stat database
 @app.get("/stat/")
 async def get_stat():
     try:
@@ -43,6 +42,7 @@ async def get_stat():
         raise HTTPException(status_code=500, detail=f"Error fetching items: {e}")
 
 
+# Insert a new row into a table : current_stat database
 @app.post("/stat/")
 async def add_stat(item: dict):
     try:
