@@ -1,9 +1,28 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 from config import supabase_client
 
 app = FastAPI()
+
+
+# Define a Pydantic model for user_response
+class UserResponse(BaseModel):
+    # Replace with actual fields from your database schema
+    TeamID: str
+    SubmittedBy: str
+    UpdateType: str
+    Content: dict
+    # Add other fields as per your table schema
+
+
+# Define a Pydantic model for current_stat
+class CurrentStat(BaseModel):
+    # Replace with actual fields from your database schema
+    team_id: int
+    msg_ids: int
+    # Add other fields as per your table schema
 
 
 # Root route
