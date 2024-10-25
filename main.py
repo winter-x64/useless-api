@@ -1,10 +1,20 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from config import supabase_client
 
 app = FastAPI()
+
+# Configure CORS
+app.add_middleware(
+    middleware_class=CORSMiddleware,
+    allow_origins=["*"],  # Allow requests from your frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 
 # Define a Pydantic model for user_response
@@ -13,6 +23,7 @@ class UserResponse(BaseModel):
     TeamID: str
     SubmittedBy: str
     UpdateType: str
+    venue_id: str
     Content: dict
     # Add other fields as per your table schema
 
