@@ -26,13 +26,13 @@ class CurrentStat(BaseModel):
 
 
 # Root route
-@app.get("/")
+@app.get(path="/")
 async def root():
     return {"message": "Hello, World"}
 
 
 # Fetch all rows from a table : user_response database
-@app.get("/usr_resp/all", description="Fetch all rows from a user_response table")
+@app.get(path="/usr_resp/all", description="Fetch all rows from a user_response table")
 async def get_usr_resp():
     try:
         response = supabase_client.table("user_response").select("*").execute()
@@ -42,7 +42,9 @@ async def get_usr_resp():
 
 
 # Insert a new row into a table : user_response database
-@app.post("/usr_resp/add", description="Insert a new row from a user_response table")
+@app.post(
+    path="/usr_resp/add", description="Insert a new row from a user_response table"
+)
 async def add_usr_resp(item: dict):
     try:
         response = supabase_client.table("user_response").insert(item).execute()
@@ -52,7 +54,7 @@ async def add_usr_resp(item: dict):
 
 
 # Fetch all rows from a table : current_stat database
-@app.get("/stat/all", description="Fetch all rows from a current_stat table")
+@app.get(path="/stat/all", description="Fetch all rows from a current_stat table")
 async def get_stat():
     try:
         response = supabase_client.table("current_stat").select("*").execute()
@@ -62,13 +64,37 @@ async def get_stat():
 
 
 # Insert a new row into a table : current_stat database
-@app.post("/stat/add", description="Insert a new row from a current_stat table")
+@app.post(path="/stat/add", description="Insert a new row from a current_stat table")
 async def add_stat(item: dict):
     try:
         response = supabase_client.table("current_stat").insert(item).execute()
         return {"message": "Item created successfully", "data": response.data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error creating item: {e}")
+
+
+# Fetch rows by venue_id from the user_response table
+@app.get(
+    path="/venue/{venue_id}",
+    description="Fetch rows by venue_id from the user_response table",
+)
+async def get_by_venue_id(venue_id: str):
+    try:
+        response = (
+            supabase_client.table("user_response")
+            .select("*")
+            .eq("venue_id", venue_id)
+            .execute()
+        )
+        if not response.data:
+            raise HTTPException(
+                status_code=404, detail="No records found for the given venue_id"
+            )
+        return response.data
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching items by venue_id: {e}"
+        )
 
 
 if __name__ == "__main__":
